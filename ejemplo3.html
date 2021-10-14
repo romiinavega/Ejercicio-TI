@@ -50,6 +50,8 @@
                         <select class="form-control" id="filter">
                             <option value="0">Selecciona un filtro</option>
                             <option value="1">Threshold</option>
+                            <option value="2">Gaussian Blur</option>
+                            <option value="3">Canny</option>
                         </select>
                         <br>
 
@@ -58,8 +60,23 @@
                             Threshold: <span id="value_sel">100</span>
                             <input type="range" class="custom-range" min="0" max="255" value="100" id="value">
                         </div>
+                        <div id="step3_o2" class="step_blocks hide">
+                            <span class="step">3</span>
+                            Kernel Filter Size: <span id="value_o2_sel">3x3</span>
+                            <input type="range" class="custom-range" min="1" max="55" value="3" step="2" id="value_o2">
+                        </div>
 
+                        <div id="step3_o3" class="step_blocks hide">
+                            <span class="step">3</span>
+                            Threshold 1: <span id="value_o3_1_sel">100</span>
+                            <input type="range" class="custom-range" min="0" max="255" value="100"  id="value_o3_1">
+                            Threshold 2: <span id="value_o3_2_sel">100</span>
+                            <input type="range" class="custom-range" min="0" max="255" value="100"  id="value_o3_2">
+                            Aperture Size: <span id="value_o3_3_sel">3</span>
+                            <input type="range" class="custom-range" min="3" max="7" value="3"  id="value_o3_3">
+                        </div>
                         <a href="#" class="btn btn-primary" style="display: none;" id="cv_start">Procesar Imagen</a>
+                        
                     </div>
 
                     <div class="col">
@@ -102,6 +119,17 @@
                         let value = parseInt($("#value").val());
                         cv.threshold(mat, mat_result, value, 255, cv.THRESH_BINARY);
                     break;}
+                    case 2:{
+                        let value = parseInt($("#value_o2").val());
+                        let ksize = new cv.Size(value, value);
+                        cv.GaussianBlur(mat, mat_result, ksize, 0, 0, cv.BORDER_DEFAULT);
+                    break;}
+                    case 3:{
+                        let value1 = parseInt($("#value_o3_1").val());
+                        let value2 = parseInt($("#value_o3_2").val());
+                        let value_aperture = parseInt($("#value_o3_3").val());
+                        cv.Canny(mat, mat_result, value1, value2, value_aperture)
+                    break;
                 }
 
                 cv.imshow('canvasOutput', mat_result);
@@ -120,7 +148,23 @@
                     $("#step3_o"+filter).show();
                 });
                 $("#value").change(function(){
-                    $("value_sel").html($(this).val());
+                    $("#value_sel").html($(this).val());
+                    process();
+                })
+                $("#value_o2").change(function(){
+                    $("#value_o2_sel").html($(this).val()+"x"+$(this).val());
+                    process();
+                })
+                $("#value_o3_1").change(function(){
+                    $("#value_o3_1_sel").html($(this).val());
+                    process();
+                })
+                $("#value_o3_2").change(function(){
+                    $("#value_o3_2_sel").html($(this).val());
+                    process();
+                })
+                $("#value_o3_3").change(function(){
+                    $("#value_o3_3_sel").html($(this).val());
                     process();
                 })
             }
@@ -133,5 +177,5 @@
 
         </script>
 
-    </body>
-</html>
+     </body>
+    </html>
