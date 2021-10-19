@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en"> 
     <head>
         <meta charset="UTF-8"> 
         <meta http-equiv="X-UA-Compatible" content="IE-edge">
@@ -52,6 +52,7 @@
                             <option value="1">Threshold</option>
                             <option value="2">Gaussian Blur</option>
                             <option value="3">Canny</option>
+                            <option value = "4">Histograma</option> 
                         </select>
                         <br>
 
@@ -130,6 +131,10 @@
                         let value_aperture = parseInt($("#value_o3_3").val());
                         cv.Canny(mat, mat_result, value1, value2, value_aperture)
                     break;
+                    case 4:{
+                        cv.cvtColor(mat, mat, cv.COLOR_BGR2GRAY);
+                        cv.equalizeHist(mat, mat_result);
+                    break;}
                 }
 
                 cv.imshow('canvasOutput', mat_result);
